@@ -1,10 +1,14 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: pg-data-claim
+  name: postgres-pv-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: rook-block
+  labels:
+    app: postgresql
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 50Gi
+      storage: 5Gi

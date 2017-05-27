@@ -37,6 +37,11 @@ spec:
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: pvclaim
+#      initContainers:
+#      - name: install
+#        image: busybox
+#        command: ['sh', '-c', 'set -ex;  echo "ordinal";']                 
+#  volumes:
 #  volumes:
 #    - name: pg-data
 #      persistentVolumeClaim:
