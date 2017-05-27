@@ -45,8 +45,19 @@ spec:
         emptyDir: {}
       initContainers:
       - name: install
-        image: busybox
-        command: ['sh', '-c', 'set -ex;  echo "ordinal" > "/init-volume/hello.sonam"']
+        image: postgres
+        command: ["bash", "-c", "set -ex;  echo 'ordinal' > 
+         '/init-volume/hello.sonam'\n
+         # Generate mysql server-id from pod ordinal index.\n
+         [[ `hostname` =~ -([0-9]+)$ ]] || exit 1\n
+         ordinal=${BASH_REMATCH[1]}\n
+         echo server-id=$((100 + $ordinal)) > 'init-volume/server-id.txt'\n
+         if [[ $ordinal -eq 0 ]]; then\n
+           echo 'master server' > '/init-volume/server-name.txt'\n
+         else\n
+           cp 'worker server' > '/init-volume/server-name.txt'\n
+         fi\n  
+         "]
         volumeMounts:
         - name: init-volume
           mountPath: "/init-volume"                
