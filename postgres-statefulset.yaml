@@ -37,13 +37,19 @@ spec:
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: pvclaim
+        volumeMounts:
+          - mountPath: /docker-entrypoint-initdb.d
+            name: init-volume
+      volumes:
+      - name: init-volume
+        emptyDir: {}
       initContainers:
       - name: install
         image: busybox
-        command: ['sh', '-c', 'set -ex;  echo "ordinal" > "/pvclaim/hello.sonam"']
+        command: ['sh', '-c', 'set -ex;  echo "ordinal" > "/init-volume/hello.sonam"']
         volumeMounts:
-        - name: pvclaim
-          mountPath: "/pvclaim"                
+        - name: init-volume
+          mountPath: "/init-volume"                
   volumeClaimTemplates:
   - metadata:
      name: pvclaim
