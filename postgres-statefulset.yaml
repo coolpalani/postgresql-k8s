@@ -7,6 +7,8 @@ metadata:
 spec:
   ports:
     - port: 5432
+      targetPort: 5432
+  clusterIP: None
   selector:
     name: postgres
 ---
@@ -37,30 +39,6 @@ spec:
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: pvclaim
-        volumeMounts:
-          - mountPath: /docker-entrypoint-initdb.d
-            name: init-volume
-      volumes:
-      - name: init-volume
-        emptyDir: {}
-      initContainers:
-      - name: install
-        image: postgres
-        command: ["bash", "-c", "set -ex;  echo 'ordinal' > 
-         '/init-volume/hello.sonam'\n
-         # Generate mysql server-id from pod ordinal index.\n
-         [[ `hostname` =~ -([0-9]+)$ ]] || exit 1\n
-         ordinal=${BASH_REMATCH[1]}\n
-         echo server-id=$((100 + $ordinal)) > 'init-volume/server-id.txt'\n
-         if [[ $ordinal -eq 0 ]]; then\n
-           echo 'master server' > '/init-volume/server-name.txt'\n
-         else\n
-           cp 'worker server' > '/init-volume/server-name.txt'\n
-         fi\n  
-         "]
-        volumeMounts:
-        - name: init-volume
-          mountPath: "/init-volume"                
   volumeClaimTemplates:
   - metadata:
      name: pvclaim
