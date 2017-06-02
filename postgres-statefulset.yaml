@@ -6,8 +6,8 @@ metadata:
     name: postgres
 spec:
   ports:
-    - port: 5432
-      targetPort: 5432
+    - name: pgsql
+      port: 5432
   clusterIP: None
   selector:
     name: postgres
@@ -35,7 +35,8 @@ spec:
           - name: POSTGRES_DB
             value: userdb
         ports:
-          - containerPort: 5432
+          - name: pgsql
+            containerPort: 5432
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: pvclaim
