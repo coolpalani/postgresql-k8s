@@ -10,7 +10,7 @@ spec:
       port: 5432
   clusterIP: None
   selector:
-    name: postgres
+    app: postgres
 ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
